@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Thank You";
+}
+
+<div class="d-flex flex-column justify-content-center">
+
+    <div class="container text-center">
+        <div class="card w-50 mx-auto">
+            <h1 class="card-header card-title text-success mt-3">
+                Thank you for your payment!
+            </h1>
+            <div class="card-body md-3">
+                <div class="container">
+                    <div>
+                        <p class="nav-container">
+                            A recipe for this transaction has been sent via email for your records
+                        </p>
+                    </div>
+                    <div>
+                        <h2>
+                            Total Paymeny Amount
+                        </h2>
+                    </div>
+                    <div>
+                        <h1>
+                            <span id="total">@ViewBag.TotalPrice.ToString("C2")</span>
+                        </h1>
+                    </div>
+                    <div>
+                        <div class="nav-container">
+                            <img src="https://media1.giphy.com/media/xTiTnqUxyWbsAXq7Ju/giphy.gif" alt="gif" style="width: 200px;"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

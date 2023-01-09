@@ -1,0 +1,183 @@
+﻿@{
+    ViewData["Title"] = "Checkout";
+}
+<style>
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+</style>
+
+@model Codecool.CodecoolShop.Models.CheckoutModel
+
+
+@using (Html.BeginForm("CheckoutValidation", "Payment", FormMethod.Post))
+{
+    <div class="container text-center">
+        <div class="card w-50 mx-auto">
+            <div class="card-header card-title text-white bg-secondary mt-3">
+                Ship To:
+            </div>
+            <div class="card-body md-3">
+                <input id="id" type="hidden"/>
+                <div class="container">
+                    <div class="all-info-container">
+                        <div class="nav-container">
+                            <p>
+                                <span>
+                                    Total:
+                                    <span id="total">@ViewBag.TotalPrice.ToString("C2")</span>
+                                </span>
+                            </p>
+                        </div>
+
+                        <div class="form-container">
+                            <p class="form-container">Please complete your delivery details</p>
+                            <div class="details">
+                                <div class="container-input-fullwidth">
+                                    <div class="text-right">
+                                        <label asp-for="FirstName" class="label-form-details">First name:</label>
+                                        @Html.EditorFor(model => model.FirstName, new
+                                        {
+                                            htmlAttributes = new
+                                            {
+                                                @class = "input-fullwidth-form-details", size = 32, maxlength = "90", autocomplete = "off",
+                                                placeholder = "John"
+                                            }
+                                        })
+                                    </div>
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+
+                                <div class="container-input-fullwidth">
+                                    <div class="text-right">
+                                        <label asp-for="LastName" class="label-form-details">Last name:</label>
+                                        @Html.EditorFor(model => model.LastName, new
+                                        {
+                                            htmlAttributes = new
+                                            {
+                                                @class = "input-fullwidth-form-details", size = 32, maxlength = "90", autocomplete = "off",
+                                                placeholder = "Doe"
+                                            }
+                                        })
+                                    </div>
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                                <div class="container-input-fullwidth">
+                                    <div class="text-right">
+                                        <label asp-for="AddressLine1" class="label-form-details">Address 1:</label>
+                                        @Html.EditorFor(model => model.AddressLine1, new
+                                        {
+                                            htmlAttributes = new
+                                            {
+                                                @class = "input-fullwidth-form-details", size = 32, maxlength = "90", autocomplete = "off",
+                                                placeholder = "123 Maple Street"
+                                            }
+                                        })
+                                    </div>
+                                    <span asp-validation-for="AddressLine1" class="text-danger"></span>
+                                </div>
+
+                                <div class="container-input-fullwidth">
+                                    <div class="text-right">
+                                        <label asp-for="AddressLine2" class="label-form-details">Address 2 (optional):</label>
+                                        @Html.EditorFor(model => model.AddressLine2, new
+                                        {
+                                            htmlAttributes = new
+                                            {
+                                                @class = "input-fullwidth-form-details", size = 32, maxlength = "90", autocomplete = "off",
+                                                placeholder = "123 Maple Street"
+                                            }
+                                        })
+                                    </div>
+                                    <span asp-validation-for="AddressLine2" class="text-danger"></span>
+                                </div>
+
+                                <div class="container-input-fullwidth">
+                                    <div class="text-right">
+                                        <label asp-for="PhoneNumber" class="label-form-details">Phone number:</label>
+                                        @Html.EditorFor(model => model.PhoneNumber, new
+                                        {
+                                            htmlAttributes = new
+                                            {
+                                                @class = "input-fullwidth-form-details", size = 32, maxlength = "90", autocomplete = "off", type = "number",
+                                                placeholder = "(555) 555-5555"
+                                            }
+                                        })
+                                    </div>
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                                <div class="container-input-fullwidth">
+                                    <div class="text-right">
+                                        <label asp-for="Email" class="label-form-details">Email:</label>
+                                        @Html.EditorFor(model => model.Email, new
+                                        {
+                                            htmlAttributes = new
+                                            {
+                                                @class = "input-fullwidth-form-details", size = 32, maxlength = "90", autocomplete = "off",
+                                                placeholder = "johndoe@gmail.com"
+                                            }
+                                        })
+                                    </div>
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+
+                                <div class="container-input-fullwidth">
+                                    <div class="text-right">
+                                        <label asp-for="City" class="label-form-details">City:</label>
+                                        @Html.EditorFor(model => model.City, new
+                                        {
+                                            htmlAttributes = new
+                                            {
+                                                @class = "input-fullwidth-form-details", size = 32, maxlength = "90", autocomplete = "on",
+                                                placeholder = "Columbus"
+                                            }
+                                        })
+                                    </div>
+                                    <span asp-validation-for="City" class="text-danger"></span>
+                                </div>
+
+                                <div class="container-input-fullwidth">
+                                    <div class="text-right">
+                                        <label asp-for="Country" class="label-form-details">Country or Region:</label>
+                                        @Html.EditorFor(model => model.Country, new
+                                        {
+                                            htmlAttributes = new
+                                            {
+                                                @class = "input-fullwidth-form-details", size = 32, maxlength = "90", autocomplete = "off",
+                                                placeholder = "Ohio"
+                                            }
+                                        })
+                                    </div>
+                                    <span asp-validation-for="Country" class="text-danger"></span>
+                                </div>
+
+                                <div class="container-input-fullwidth">
+                                    <div class="text-right">
+                                        <label asp-for="ZipCode" class="label-form-details">ZIP code:</label>
+                                        @Html.EditorFor(model => model.ZipCode, new
+                                        {
+                                            htmlAttributes = new
+                                            {
+                                                @class = "input-fullwidth-form-details", size = 32, maxlength = "90", autocomplete = "off",
+                                                placeholder = "12345"
+                                            }
+                                        })
+                                    </div>
+                                    <span asp-validation-for="ZipCode" class="text-danger"></span>
+                                </div>
+
+                            </div>
+                            <div>
+                                <input type="submit" value="Payment" id="Submit" class="btn btn-default" style="background-color: #1b6ec2; color: white"/>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
