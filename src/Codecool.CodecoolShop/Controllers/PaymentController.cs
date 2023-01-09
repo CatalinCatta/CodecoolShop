@@ -24,13 +24,13 @@ public class PaymentController : Controller
     }
 
     [HttpPost]
-    public IActionResult CheckoutValidation()
+    public IActionResult CheckoutValidation(CheckoutModel model)
     {
         ViewBag.TotalPrice = ShoppingCart.Items.Sum(x => x.Product.DefaultPrice);
         return ModelState.IsValid ? RedirectToAction("Payment", "Payment") : View("Checkout", new CheckoutModel());
     }
 
-    public IActionResult Payment()
+    public IActionResult Payment(PaymentModel model)
     {
         ViewBag.TotalPrice = ShoppingCart.Items.Sum(x => x.Product.DefaultPrice);
         return View(new PaymentModel());
