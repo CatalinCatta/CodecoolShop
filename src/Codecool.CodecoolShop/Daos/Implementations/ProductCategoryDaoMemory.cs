@@ -1,46 +1,40 @@
 using System.Collections.Generic;
 using Codecool.CodecoolShop.Models;
 
-namespace Codecool.CodecoolShop.Daos.Implementations
+namespace Codecool.CodecoolShop.Daos.Implementations;
+
+internal class ProductCategoryDaoMemory : IProductCategoryDao
 {
-    class ProductCategoryDaoMemory : IProductCategoryDao
+    private readonly List<ProductCategory> _data = new();
+    private static ProductCategoryDaoMemory _instance;
+
+    private ProductCategoryDaoMemory()
     {
-        private List<ProductCategory> data = new List<ProductCategory>();
-        private static ProductCategoryDaoMemory instance = null;
+    }
 
-        private ProductCategoryDaoMemory()
-        {
-        }
+    public static ProductCategoryDaoMemory GetInstance()
+    {
+        return _instance ??= new ProductCategoryDaoMemory();
+    }
 
-        public static ProductCategoryDaoMemory GetInstance()
-        {
-            if (instance == null)
-            {
-                instance = new ProductCategoryDaoMemory();
-            }
+    public void Add(ProductCategory item)
+    {
+        item.Id = _data.Count + 1;
+        _data.Add(item);
+    }
 
-            return instance;
-        }
+    public void Remove(int id)
+    {
+        _data.Remove(Get(id));
+    }
 
-        public void Add(ProductCategory item)
-        {
-            item.Id = data.Count + 1;
-            data.Add(item);
-        }
+    public ProductCategory Get(int id)
+    {
+        return _data.Find(x => x.Id == id);
+    }
 
-        public void Remove(int id)
-        {
-            data.Remove(this.Get(id));
-        }
-
-        public ProductCategory Get(int id)
-        {
-            return data.Find(x => x.Id == id);
-        }
-
-        public IEnumerable<ProductCategory> GetAll()
-        {
-            return data;
-        }
+    public IEnumerable<ProductCategory> GetAll()
+    {
+        return _data;
     }
 }
