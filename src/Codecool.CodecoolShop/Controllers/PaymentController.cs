@@ -30,14 +30,14 @@ public class PaymentController : Controller
         return ModelState.IsValid ? RedirectToAction("Payment", "Payment") : View("Checkout", new CheckoutModel());
     }
 
-    public IActionResult Payment(PaymentModel model)
+    public IActionResult Payment()
     {
         ViewBag.TotalPrice = ShoppingCart.Items.Sum(x => x.Product.DefaultPrice);
         return View(new PaymentModel());
     }
 
     [HttpPost]
-    public IActionResult ValidationPayment()
+    public IActionResult ValidationPayment(PaymentModel model)
     {
         ViewBag.TotalPrice = ShoppingCart.Items.Sum(x => x.Product.DefaultPrice);
         return ModelState.IsValid ? RedirectToAction("Confirmation", "Payment") : View("Payment", new PaymentModel());
