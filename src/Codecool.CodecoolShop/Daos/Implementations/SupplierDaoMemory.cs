@@ -1,46 +1,40 @@
 using System.Collections.Generic;
 using Codecool.CodecoolShop.Models;
 
-namespace Codecool.CodecoolShop.Daos.Implementations
+namespace Codecool.CodecoolShop.Daos.Implementations;
+
+public class SupplierDaoMemory : ISupplierDao
 {
-    public class SupplierDaoMemory : ISupplierDao
+    private readonly List<Supplier> _data = new();
+    private static SupplierDaoMemory _instance;
+
+    private SupplierDaoMemory()
     {
-        private List<Supplier> data = new List<Supplier>();
-        private static SupplierDaoMemory instance = null;
+    }
 
-        private SupplierDaoMemory()
-        {
-        }
+    public static SupplierDaoMemory GetInstance()
+    {
+        return _instance ??= new SupplierDaoMemory();
+    }
 
-        public static SupplierDaoMemory GetInstance()
-        {
-            if (instance == null)
-            {
-                instance = new SupplierDaoMemory();
-            }
+    public void Add(Supplier item)
+    {
+        item.Id = _data.Count + 1;
+        _data.Add(item);
+    }
 
-            return instance;
-        }
+    public void Remove(int id)
+    {
+        _data.Remove(Get(id));
+    }
 
-        public void Add(Supplier item)
-        {
-            item.Id = data.Count + 1;
-            data.Add(item);
-        }
+    public Supplier Get(int id)
+    {
+        return _data.Find(x => x.Id == id);
+    }
 
-        public void Remove(int id)
-        {
-            data.Remove(this.Get(id));
-        }
-
-        public Supplier Get(int id)
-        {
-            return data.Find(x => x.Id == id);
-        }
-
-        public IEnumerable<Supplier> GetAll()
-        {
-            return data;
-        }
+    public IEnumerable<Supplier> GetAll()
+    {
+        return _data;
     }
 }

@@ -1,0 +1,121 @@
+﻿@{
+    ViewData["Title"] = "Payment";
+}
+<style>
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+</style>
+@model Codecool.CodecoolShop.Models.PaymentModel
+
+@using (Html.BeginForm("ValidationPayment", "Payment", FormMethod.Post))
+{
+    <div class="container text-center">
+        <div class="card w-50 mx-auto">
+            <div class="card-header card-title text-white bg-secondary mt-3">
+                Ship To:
+            </div>
+            <div class="card-body md-3">
+                <input id="id" type="hidden"/>
+                <div class="container">
+                    <div class="all-info-container">
+                        <div class="nav-container">
+                            <p>
+                                <span>
+                                    Total:
+                                    <span id="total">@ViewBag.TotalPrice.ToString("C2")</span>
+                                </span>
+                            </p>
+                        </div>
+
+                        <div class="form-container">
+                            <p class="form-container">Please complete your delivery details</p>
+
+                            <div class="container-input-fullwidth">
+                                <div class="text-right">
+                                    <label asp-for="CardHolder" class="label-form-details">Card Holder:</label>
+                                    @Html.EditorFor(model => model.CardHolder, new
+                                    {
+                                        htmlAttributes = new
+                                        {
+                                            @class = "input-fullwidth-form-details", size = 32, maxlength = "90", autocomplete = "off",
+                                            placeholder = "John Doe"
+                                        }
+                                    })
+                                </div>
+                                <span asp-validation-for="CardHolder" class="text-danger"></span>
+
+                            </div>
+
+                            <div class="container-input-fullwidth">
+                                <div class="text-right">
+                                    <label asp-for="CardNumber" class="label-form-details">Card Number:</label>
+                                    @Html.EditorFor(model => model.CardNumber, new
+                                    {
+                                        htmlAttributes = new
+                                        {
+                                            @class = "input-fullwidth-form-details", size = 32, maxlength = "90", autocomplete = "off", type = "number",
+                                            placeholder = "1234567890123456"
+                                        }
+                                    })
+                                </div>
+                                <span asp-validation-for="CardNumber" class="text-danger"></span>
+                            </div>
+                            <div class="container-input-fullwidth">
+                                <div class="text-right">
+                                    <label asp-for="ExpiryMonth" class="label-form-details">Expiry Month:</label>
+                                    @Html.EditorFor(model => model.ExpiryMonth, new
+                                    {
+                                        htmlAttributes = new
+                                        {
+                                            @class = "input-fullwidth-form-details", size = 32, maxlength = "90", autocomplete = "off", type = "number",
+                                            placeholder = "08"
+                                        }
+                                    })
+                                </div>
+                                <span asp-validation-for="ExpiryMonth" class="text-danger"></span>
+                            </div>
+
+                            <div class="container-input-fullwidth">
+                                <div class="text-right">
+                                    <label asp-for="ExpiryYear" class="label-form-details">Expiry Year:</label>
+                                    @Html.EditorFor(model => model.ExpiryYear, new
+                                    {
+                                        htmlAttributes = new
+                                        {
+                                            @class = "input-fullwidth-form-details", size = 32, maxlength = "90", autocomplete = "off", type = "number",
+                                            placeholder = "27"
+                                        }
+                                    })
+                                </div>
+                                <span asp-validation-for="ExpiryYear" class="text-danger"></span>
+                            </div>
+
+                            <div class="container-input-fullwidth">
+                                <div class="text-right">
+                                    <label asp-for="Cvv" class="label-form-details">CVV:</label>
+                                    @Html.EditorFor(model => model.Cvv, new
+                                    {
+                                        htmlAttributes = new
+                                        {
+                                            @class = "input-fullwidth-form-details", size = 32, maxlength = "90", autocomplete = "off", type = "number",
+                                            placeholder = "123"
+                                        }
+                                    })
+                                </div>
+                                <span asp-validation-for="Cvv" class="text-danger"></span>
+                            </div>
+                            <div>
+                                <input type="submit" value="Payment" id="Submit" class="btn btn-default" style="background-color: #1b6ec2; color: white"/>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

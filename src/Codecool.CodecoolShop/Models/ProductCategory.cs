@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 
-namespace Codecool.CodecoolShop.Models
+namespace Codecool.CodecoolShop.Models;
+
+public class ProductCategory : BaseModel
 {
-    public class ProductCategory: BaseModel
-    {
-        public List<Product> Products { get; set; }
-        public string Department { get; set; }
-    }
+    public List<Product> Products { get; set; }
+    public string Department { get; init; }
 }
