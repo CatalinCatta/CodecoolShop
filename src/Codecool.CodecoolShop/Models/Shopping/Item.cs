@@ -1,11 +1,9 @@
-﻿using Codecool.CodecoolShop.Models;
-
-namespace Codecool.CodecoolShop.Services.Shopping;
+﻿namespace Codecool.CodecoolShop.Models.Shopping;
 
 public class Item
 {
     public readonly Product Product;
-    public int Number;
+    public readonly int Number;
 
     public Item(Product product, int number)
     {
