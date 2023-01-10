@@ -5,5 +5,9 @@ namespace Codecool.CodecoolShop.Models;
 public class ProductCategory : BaseModel
 {
     public List<Product> Products { get; set; }
-    public string Department { get; init; }
+    
+    public override string ToString()
+    {
+        return new string($"Id: {Id} Name: {Name} Description: {Description}");
+    }
 }

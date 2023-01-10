@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Codecool.CodecoolShop.Daos.Implementations;
+using Codecool.CodecoolShop.Daos;
+using Codecool.CodecoolShop.Manager;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Codecool.CodecoolShop.Models;
 using Codecool.CodecoolShop.Services;
-using Codecool.CodecoolShop.Services.Shopping;
 
 namespace Codecool.CodecoolShop.Controllers;
 
@@ -14,16 +14,17 @@ public class ProductController : Controller
 {
     private ILogger<ProductController> Logger1 { get; }
     private ProductService ProductService { get; }
-    private ShoppingCart ShoppingCart { get; }
+    private IShoppingCartDao ShoppingCart { get; }
 
     public ProductController(ILogger<ProductController> logger)
     {
+        var dbManager = DbManager.GetInstance();
         Logger1 = logger;
         ProductService = new ProductService(
-            ProductDaoMemory.GetInstance(),
-            ProductCategoryDaoMemory.GetInstance(),
-            SupplierDaoMemory.GetInstance());
-        ShoppingCart = ShoppingCart.GetInstance();
+            dbManager.ProductDao,
+            dbManager.ProductCategoryDao,
+            dbManager.SupplierDao);
+        ShoppingCart = dbManager.ShoppingCartDao;
     }
 
     public IActionResult Index(int category = 0, int supplier = 0)
@@ -66,7 +67,7 @@ public class ProductController : Controller
 
     public IActionResult Cart()
     {
-        return View(ShoppingCart.Items);
+        return View(ShoppingCart.GetAllForUser());
     }
 
     public IActionResult Privacy()
