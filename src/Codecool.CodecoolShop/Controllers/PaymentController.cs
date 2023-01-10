@@ -4,7 +4,6 @@ using Codecool.CodecoolShop.Manager;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Codecool.CodecoolShop.Models;
-using Codecool.CodecoolShop.Models.Shopping;
 
 namespace Codecool.CodecoolShop.Controllers;
 
@@ -23,34 +22,35 @@ public class PaymentController : Controller
 
     public IActionResult Checkout()
     {
-        ViewBag.TotalPrice = ShoppingCart.GetAllForUser().Sum(x => x.Product.DefaultPrice);
+        //Logger1.LogInformation("Test1: " + ShoppingCart.GetAllForUser().ToList().Sum(x => x.Product.DefaultPrice));
+        ViewBag.TotalPrice = ShoppingCart.GetAllForUser().Sum(x => x.Product.DefaultPrice * x.Number);
         return View(new CheckoutModel());
     }
 
     [HttpPost]
     public IActionResult CheckoutValidation(CheckoutModel model)
     {
-        ViewBag.TotalPrice = ShoppingCart.GetAllForUser().Sum(x => x.Product.DefaultPrice);
+        ViewBag.TotalPrice = ShoppingCart.GetAllForUser().ToList().Sum(x => x.Product.DefaultPrice * x.Number);
         return ModelState.IsValid ? RedirectToAction("Payment", "Payment") : View("Checkout", new CheckoutModel());
     }
 
     public IActionResult Payment()
     {
-        ViewBag.TotalPrice = ShoppingCart.GetAllForUser().Sum(x => x.Product.DefaultPrice);
+        ViewBag.TotalPrice = ShoppingCart.GetAllForUser().ToList().Sum(x => x.Product.DefaultPrice * x.Number);
         return View(new PaymentModel());
     }
 
     [HttpPost]
     public IActionResult ValidationPayment(PaymentModel model)
     {
-        ViewBag.TotalPrice = ShoppingCart.GetAllForUser().Sum(x => x.Product.DefaultPrice);
+        ViewBag.TotalPrice = ShoppingCart.GetAllForUser().ToList().Sum(x => x.Product.DefaultPrice * x.Number);
         return ModelState.IsValid ? RedirectToAction("Confirmation", "Payment") : View("Payment", new PaymentModel());
     }
 
     public IActionResult Confirmation()
     {
-        var products = ShoppingCart.GetAllForUser();
-        ViewBag.TotalPrice = products.Sum(x => x.Product.DefaultPrice);
+        var products = ShoppingCart.GetAllForUser().ToList();
+        ViewBag.TotalPrice = products.Sum(x => x.Product.DefaultPrice * x.Number);
         foreach (var product in products)
         {
             OrderHistory.Add(product);
