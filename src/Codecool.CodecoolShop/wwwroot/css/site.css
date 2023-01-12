@@ -5,6 +5,7 @@ a.navbar-brand {
   white-space: normal;
   text-align: center;
   word-break: break-all;
+  margin-right: 0px;
 }
 
 /* Provide sufficient contrast against white background */
@@ -63,9 +64,91 @@ body {
   margin-bottom: 60px;
 }
 .footer {
-  position: absolute;
+  /*position: absolute;*/
   bottom: 0;
   width: 100%;
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
+  height: 2em;
+  left: 0;
+  position: relative;
+  font-size: small;
 }
+
+/* menu
+-------------------------------------------------- */
+nav.primary-navigation {
+  margin: 0 auto;
+  display: block;
+  text-align: center;
+  font-size: 16px;
+  z-index: 10;
+}
+nav.primary-navigation ul li {
+  list-style: none;
+  margin: 0 auto;
+  display: inline-block;
+  padding: 0 30px;
+  position: relative;
+  text-decoration: none;
+  text-align: center;
+  font-family: arvo;
+}
+
+li :hover {
+  padding-left: 10px;
+  border-left: 2px solid #3ca0e7;
+  padding-right: 10px;
+  border-right: 2px solid #3ca0e7;
+  transition: all 0.3s ease;
+}
+
+nav.primary-navigation li a {
+  color: black;
+}
+/*nav.primary-navigation li a:hover {*/
+/*}*/
+nav.primary-navigation li:hover {
+  cursor: pointer;
+}
+nav.primary-navigation ul li ul {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  padding-left: 0;
+  left: 0;
+  display: none;
+  background: white;
+}
+nav.primary-navigation ul li:hover > ul, nav.primary-navigation ul li ul:hover {
+  visibility: visible;
+  opacity: 1;
+  display: block;
+  min-width: 250px;
+  text-align: left;
+  padding-top: 20px;
+  box-shadow: 0px 3px 5px -1px #ccc;
+}
+nav.primary-navigation ul li ul li {
+  clear: both;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+  border-style: none;
+}
+nav.primary-navigation ul li ul li a:hover {
+  padding-left: 10px;
+  border-left: 2px solid #3ca0e7;
+  transition: all 0.3s ease;
+}
+a {
+  text-decoration: none;
+}
+a:hover {
+  color: #3ca0e7;
+  text-decoration: none;
+}
+ul li ul li a {
+  transition: all 0.5s ease;
+}
+ 
