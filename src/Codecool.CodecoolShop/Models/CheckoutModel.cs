@@ -53,4 +53,6 @@ public class CheckoutModel
     [StringLength(10, MinimumLength = 4)]
     [DataType(DataType.PostalCode)]
     public string ZipCode { get; set; }
+    
+    public bool SaveData { get; set; }
 }

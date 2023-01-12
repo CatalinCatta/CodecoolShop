@@ -32,4 +32,6 @@ public class PaymentModel
     [MaxLength(4)]
     [MinLength(3)]
     public string Cvv { get; set; }
+   
+    public bool SaveData { get; set; }
 }

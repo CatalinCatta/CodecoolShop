@@ -13,6 +13,7 @@ public class PaymentController : Controller
     private ILogger<PaymentController> Logger1 { get; }
     private IShoppingCartDao ShoppingCart { get; }
     private IOrderHistoryDao OrderHistory { get; }
+    private IUserDao UserDao { get; }
 
     public PaymentController(ILogger<PaymentController> logger)
     {
@@ -20,33 +21,45 @@ public class PaymentController : Controller
         var dbManager = DbManager.GetInstance();
         ShoppingCart = dbManager.ShoppingCartDao;
         OrderHistory = dbManager.OrderHistoryDao;
+        UserDao = dbManager.UserDao;
     }
 
     public IActionResult Checkout()
     {
-        //Logger1.LogInformation("Test1: " + ShoppingCart.GetAllForUser().ToList().Sum(x => x.Product.DefaultPrice));
-        ViewBag.TotalPrice = ShoppingCart.GetAllForUser(HttpContext.Session.GetInt32("id")).Sum(x => x.Product.DefaultPrice * x.Number);
-        return View(new CheckoutModel());
+        ViewBag.TotalPrice = ShoppingCart.GetAllForUser(HttpContext.Session.GetInt32("id"))
+            .Sum(x => x.Product.DefaultPrice * x.Number);
+        var model = UserDao.GetCheckoutData(HttpContext.Session.GetInt32("id"))?? new CheckoutModel();
+        return View(model);
     }
 
     [HttpPost]
     public IActionResult CheckoutValidation(CheckoutModel model)
     {
-        ViewBag.TotalPrice = ShoppingCart.GetAllForUser(HttpContext.Session.GetInt32("id")).ToList().Sum(x => x.Product.DefaultPrice * x.Number);
-        return ModelState.IsValid ? RedirectToAction("Payment", "Payment") : View("Checkout", new CheckoutModel());
+        ViewBag.TotalPrice = ShoppingCart.GetAllForUser(HttpContext.Session.GetInt32("id")).ToList()
+            .Sum(x => x.Product.DefaultPrice * x.Number);
+        if (!ModelState.IsValid) return View("Checkout", new CheckoutModel());
+
+        if (model.SaveData) UserDao.SaveCheckoutData(model, HttpContext.Session.GetInt32("id"));
+        return RedirectToAction("Payment", "Payment");
     }
 
     public IActionResult Payment()
     {
-        ViewBag.TotalPrice = ShoppingCart.GetAllForUser(HttpContext.Session.GetInt32("id")).ToList().Sum(x => x.Product.DefaultPrice * x.Number);
-        return View(new PaymentModel());
+        ViewBag.TotalPrice = ShoppingCart.GetAllForUser(HttpContext.Session.GetInt32("id")).ToList()
+            .Sum(x => x.Product.DefaultPrice * x.Number);
+        var model = UserDao.GetPaymentData(HttpContext.Session.GetInt32("id")) ?? new PaymentModel();
+        return View(model);
     }
 
     [HttpPost]
     public IActionResult ValidationPayment(PaymentModel model)
     {
-        ViewBag.TotalPrice = ShoppingCart.GetAllForUser(HttpContext.Session.GetInt32("id")).ToList().Sum(x => x.Product.DefaultPrice * x.Number);
-        return ModelState.IsValid ? RedirectToAction("Confirmation", "Payment") : View("Payment", new PaymentModel());
+        ViewBag.TotalPrice = ShoppingCart.GetAllForUser(HttpContext.Session.GetInt32("id")).ToList()
+            .Sum(x => x.Product.DefaultPrice * x.Number);
+        if (!ModelState.IsValid) return View("Payment", new PaymentModel());
+
+        if (model.SaveData) UserDao.SavePaymentData(model, HttpContext.Session.GetInt32("id"));
+        return RedirectToAction("Confirmation", "Payment");
     }
 
     public IActionResult Confirmation()
@@ -57,6 +70,7 @@ public class PaymentController : Controller
         {
             OrderHistory.Add(product, HttpContext.Session.GetInt32("id"));
         }
+
         ShoppingCart.EmptyCart(HttpContext.Session.GetInt32("id"));
         return View();
     }

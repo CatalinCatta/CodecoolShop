@@ -33,7 +33,14 @@ input::-webkit-inner-spin-button {
                         </div>
 
                         <div class="form-container">
-                            <p class="form-container">Please complete your delivery details</p>
+                            @if (Model.SaveData)
+                            {
+                                    <p class="form-container">Please confirm your delivery details</p>
+                            }
+                            else
+                            {
+                                <p class="form-container">Please complete your delivery details</p>
+                            }
                             <div class="details">
                                 <div class="container-input-fullwidth">
                                     <div class="text-right">
@@ -166,7 +173,9 @@ input::-webkit-inner-spin-button {
                                     </div>
                                     <span asp-validation-for="ZipCode" class="text-danger"></span>
                                 </div>
-
+                            </div>
+                            <div>
+                                @Html.CheckBox("SaveData", false)<span>Save details for future purchases</span>
                             </div>
                             <div>
                                 <input type="submit" value="Confirm" id="Submit" class="btn btn-default" style="background-color: #1b6ec2; color: white"/>
