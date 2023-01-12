@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS admins;
 
 CREATE TABLE products
 (
-    id                  integer     not null,
+    id                  integer IDENTITY (1,1) PRIMARY KEY,
     name                varchar(50) not null,
     default_price       decimal     not null,
     currency            varchar(50) not null,
@@ -20,23 +20,25 @@ CREATE TABLE products
 
 CREATE TABLE category
 (
-    id          integer     not null,
+    id          integer IDENTITY (1,1) PRIMARY KEY,
     name        varchar(50) not null,
     description varchar(500)
 );
 
 CREATE TABLE suppliers
 (
-    id          integer     not null,
+    id          integer IDENTITY (1,1) PRIMARY KEY,
     name        varchar(50) not null,
     description varchar(500)
 );
 
 CREATE TABLE users_log
 (
-    id       int         not null,
-    username varchar(50) not null,
-    password varchar(50) not null
+    id       int IDENTITY (1,1) PRIMARY KEY,
+    username varchar(50)  not null,
+    email    varchar(50)  not null,
+    password varchar(500) not null,
+    salt     varchar(50)  not null
 );
 
 CREATE TABLE users_data
@@ -47,7 +49,6 @@ CREATE TABLE users_data
     address_1    varchar(50),
     address_2    varchar(50),
     phone_number varchar(50),
-    email        varchar(50),
     city         varchar(50),
     country      varchar(50),
     zip_code     varchar(50),
@@ -60,9 +61,11 @@ CREATE TABLE users_data
 
 CREATE TABLE admins
 (
-    id       int         not null,
-    username varchar(50) not null,
-    password varchar(50) not null
+    id       int IDENTITY (2,1) PRIMARY KEY,
+    username varchar(50)  not null,
+    email    varchar(50)  not null,
+    password varchar(500) not null,
+    salt     varchar(50)  not null
 );
 
 CREATE TABLE cart
@@ -76,42 +79,40 @@ CREATE TABLE order_history
 (
     user_id    int not null,
     product_id int not null,
-    quantity   int default 1,
-    date DATE default current_timestamp
+    quantity   int  default 1,
+    date       DATE default current_timestamp
 );
 
 INSERT INTO products
-VALUES (1, 'Amazon Fire', 49.9, 'USD',
+VALUES ('Amazon Fire', 49.9, 'USD',
         'Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.', 1, 1);
 INSERT INTO products
-VALUES (2, 'Lenovo IdeaPad Miix 700', 479.0, 'USD',
+VALUES ('Lenovo IdeaPad Miix 700', 479.0, 'USD',
         'Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand.', 1, 2);
 INSERT INTO products
-VALUES (3, 'Amazon Fire HD 8', 89.0, 'USD', 'Amazon''s latest Fire HD 8 tablet is a great value for media consumption.',
+VALUES ('Amazon Fire HD 8', 89.0, 'USD', 'Amazon''s latest Fire HD 8 tablet is a great value for media consumption.',
         1, 1);
 
 INSERT INTO category
-VALUES (1, 'Hardware',
+VALUES ('Hardware',
         'A tablet computer, commonly shortened to tablet, is a thin, flat mobile computer with a touchscreen display.');
 
 INSERT INTO suppliers
-VALUES (1, 'Amazon', 'Digital content and services');
+VALUES ('Amazon', 'Digital content and services');
 INSERT INTO suppliers
-VALUES (2, 'Lenovo', 'Computers');
+VALUES ('Lenovo', 'Computers');
+
+INSERT INTO users_log
+VALUES ('user_test', 'user_test@example.com',
+        'ESE5x6tkvE3P7T/rvD/nEx2lCRplbNJwTCSgD7/kZR19KX+wN3icg2g61LAucrnPZTyai6lVa83bhv2AHuvKv7RBP0LII9+ZiBxJEYUO81wl8nmMcFICPcIsDLDK0yBbV/gfRmDM5rwNdZmXbf7jorsWV3eaciCmFUD22l2bF3bNMqkDYEhxlsdV7ttNrnsvyJs2mjYuhfSa5p9jkOwvyDj7/1SA+CWHd/r5rtFwxR3CtlpfJE2iKW9sITA7mMhT82422d3Wb19+sRFFPCH5IJ0NRW9nYfFmZgh95OczfE4+YQ9TrXZ7zMR7+WYEG2tTovj861N9+34Kl9rHFNeCKg==',
+        'NMtW8w=='); -- pass = test
+
+INSERT INTO admins
+VALUES ('admin_test', 'admin_test@example.com',
+        'ESE5x6tkvE3P7T/rvD/nEx2lCRplbNJwTCSgD7/kZR19KX+wN3icg2g61LAucrnPZTyai6lVa83bhv2AHuvKv7RBP0LII9+ZiBxJEYUO81wl8nmMcFICPcIsDLDK0yBbV/gfRmDM5rwNdZmXbf7jorsWV3eaciCmFUD22l2bF3bNMqkDYEhxlsdV7ttNrnsvyJs2mjYuhfSa5p9jkOwvyDj7/1SA+CWHd/r5rtFwxR3CtlpfJE2iKW9sITA7mMhT82422d3Wb19+sRFFPCH5IJ0NRW9nYfFmZgh95OczfE4+YQ9TrXZ7zMR7+WYEG2tTovj861N9+34Kl9rHFNeCKg==',
+        'NMtW8w=='); -- pass = test
 
 GO
-
-
-ALTER TABLE products
-    ADD PRIMARY KEY (id);
-ALTER TABLE category
-    ADD PRIMARY KEY (id);
-ALTER TABLE suppliers
-    ADD PRIMARY KEY (id);
-ALTER TABLE users_log
-    ADD PRIMARY KEY (id);
-ALTER TABLE admins
-    ADD PRIMARY KEY (id);
 
 ALTER TABLE products
     ADD CONSTRAINT product_category_fk
