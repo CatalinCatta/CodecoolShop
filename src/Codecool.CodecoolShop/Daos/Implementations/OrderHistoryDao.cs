@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Runtime.CompilerServices;
+using Codecool.CodecoolShop.Models;
 using Codecool.CodecoolShop.Models.Shopping;
 using Microsoft.Data.SqlClient;
 
@@ -12,12 +13,11 @@ public class OrderHistoryDao: IOrderHistoryDao
 {
     private static OrderHistoryDao? _instance;
     private readonly string _connectionString;
-    private readonly IProductDao _productDao;
 
     private OrderHistoryDao(string connectionString)
     {
         _connectionString = connectionString;
-        _productDao = ProductDaoMemory.GetInstance(connectionString);
+        ProductDaoMemory.GetInstance(connectionString);
     }
 
     public static OrderHistoryDao GetInstance(string connectionString)
@@ -48,41 +48,62 @@ public class OrderHistoryDao: IOrderHistoryDao
         }
     }
 
-    public IEnumerable<ItemHistory> GetAllForUser(int userId)
+    public IEnumerable<OrderHistoryModel> GetAllForUser(int? userId)
     {
-        const string cmdText = @"SELECT * FROM order_history WHERE user_id=@user_id;";
+        const string cmdText = @"
+            SELECT oh.id, ud.first_name, ud.last_name, p.name, oh.quantity, oh.date, p.default_price
+            FROM order_history AS oh
+            LEFT JOIN users_data ud 
+                ON oh.user_id = ud.user_id
+            LEFT JOIN products p 
+                ON p.id = oh.product_id
+            WHERE oh.user_id = @userId;";
         try
         {
-            var results = new List<ItemHistory>();
+            var results = new List<OrderHistoryModel>();
             using var connection = new SqlConnection(_connectionString);
             var cmd = new SqlCommand(cmdText, connection);
             if (connection.State == ConnectionState.Closed)
                 connection.Open();
-            cmd.Parameters.AddWithValue("@user_id", userId);
+            cmd.Parameters.AddWithValue("@userId", userId);
             var reader = cmd.ExecuteReader();
             if (!reader.HasRows)
                 return results;
             while (reader.Read())
             {
-                var item = new ItemHistory(_productDao.Get((int)reader["product_id"]), (int)reader["quantity"], (DateTime)reader["date"]);
-                results.Add(item);
+                var order = new OrderHistoryModel
+                {
+                    OrderId = (int)reader["id"],
+                    UserName = reader["first_name"] + " " + reader["last_name"],
+                    ProductName = reader["name"] as string,
+                    Quantity = (int)reader["quantity"], 
+                    Date = (DateTime)reader["date"],
+                    Price = (int)reader["quantity"] * (decimal)reader["default_price"]
+                };
+                results.Add(order);
             }
-
             connection.Close();
             return results;
         }
         catch (SqlException e)
         {
-            throw new RuntimeWrappedException(e);
+            Console.WriteLine(e);
+            return new List<OrderHistoryModel>();
         }
     }
 
-    public IEnumerable<ItemHistory> GetAllForAdmin()
+    public IEnumerable<OrderHistoryModel> GetAllForAdmin()
     {
-        const string cmdText = @"SELECT * FROM order_history";
+        const string cmdText = @"
+            SELECT oh.id, ud.first_name, ud.last_name, p.name, oh.quantity, oh.date, p.default_price
+            FROM order_history AS oh
+            LEFT JOIN users_data ud 
+                ON oh.user_id = ud.user_id
+            LEFT JOIN products p 
+                ON p.id = oh.product_id;";
         try
         {
-            var results = new List<ItemHistory>();
+            var results = new List<OrderHistoryModel>();
             using var connection = new SqlConnection(_connectionString);
             var cmd = new SqlCommand(cmdText, connection);
             if (connection.State == ConnectionState.Closed)
@@ -92,10 +113,17 @@ public class OrderHistoryDao: IOrderHistoryDao
                 return results;
             while (reader.Read())
             {
-                var item = new ItemHistory(_productDao.Get((int)reader["product_id"]), (int)reader["quantity"], (DateTime)reader["date"]);
-                results.Add(item);
+                var order = new OrderHistoryModel
+                {
+                    OrderId = (int)reader["id"],
+                    UserName = reader["first_name"] + " " + reader["last_name"],
+                    ProductName = reader["name"] as string,
+                    Quantity = (int)reader["quantity"], 
+                    Date = (DateTime)reader["date"],
+                    Price = (int)reader["quantity"] * (decimal)reader["default_price"]
+                };
+                results.Add(order);
             }
-
             connection.Close();
             return results;
         }

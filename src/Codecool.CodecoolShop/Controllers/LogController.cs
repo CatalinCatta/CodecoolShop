@@ -12,6 +12,8 @@ public class LogController : Controller
 {
     private readonly IUserDao _userDao;
     private readonly IAdminDao _adminDao;
+    private readonly IOrderHistoryDao _orderHistoryDao;
+    
     private ILogger<LogController> Logger1 { get; }
 
     public LogController(ILogger<LogController> logger)
@@ -20,6 +22,7 @@ public class LogController : Controller
         var dbManager = DbManager.GetInstance();
         _userDao = dbManager.UserDao;
         _adminDao = dbManager.AdminDao;
+        _orderHistoryDao = dbManager.OrderHistoryDao;
     }
     
     public IActionResult Login(bool wrongInput=false)
@@ -34,11 +37,6 @@ public class LogController : Controller
     {
         ViewBag.Username = "HttpContext.Session.GetString(\"username\")";
         if (!ModelState.IsValid) return RedirectToAction("Login", "Log", new { wrongInput = true });
-
-        var pass = PasswordManager.GenerateSaltedHash(model.Password);
-        Logger1.LogInformation("hash: " + pass.Hash + " :end\nsalt: " + pass.Salt + " :end");
-        Logger1.LogInformation(" " +PasswordManager.VerifyPassword("test", "", pass.Salt));
-        
         
         var userExpected = _userDao.GetPassword(model.UserName);
         if (userExpected != null && PasswordManager.VerifyPassword(model.Password, userExpected.Hash, userExpected.Salt))
@@ -58,7 +56,7 @@ public class LogController : Controller
 
     public IActionResult SignUp(bool taken=false, bool empty = false)
     {
-        ViewBag.Username = "HttpContext.Session.GetString(\"username\")";
+        ViewBag.Username = "";
         ViewBag.taken = taken;
         ViewBag.empty = empty;
         return View(new SignUpModel());
@@ -82,6 +80,12 @@ public class LogController : Controller
         return RedirectToAction("Index", "Product");
     }
 
+    public IActionResult History()
+    {
+        var historyData = _orderHistoryDao.GetAllForUser(HttpContext.Session.GetInt32("id"));
+        return View(historyData);
+    }
+    
     public IActionResult LogOut()
     {
         HttpContext.Session.Clear();
