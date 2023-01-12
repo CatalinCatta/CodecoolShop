@@ -20,6 +20,9 @@ public class DbManager
     public readonly IShoppingCartDao ShoppingCartDao;
     public readonly IProductCategoryDao ProductCategoryDao;
     public readonly IOrderHistoryDao OrderHistoryDao;
+    public readonly IUserDao UserDao;
+    public readonly IAdminDao AdminDao;
+    
     private static DbManager? _instance;
 
     private DbManager()
@@ -30,6 +33,8 @@ public class DbManager
         ShoppingCartDao = Daos.Implementations.ShoppingCartDao.GetInstance(ConnectionString());
         ProductCategoryDao = ProductCategoryDaoMemory.GetInstance(ConnectionString());
         OrderHistoryDao = Daos.Implementations.OrderHistoryDao.GetInstance(ConnectionString());
+        UserDao = Daos.Implementations.UserDao.GetInstance(ConnectionString());
+        AdminDao = Daos.Implementations.AdminDao.GetInstance(ConnectionString());
     }
 
     public static DbManager GetInstance()
