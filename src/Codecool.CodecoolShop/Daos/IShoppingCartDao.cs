@@ -6,10 +6,10 @@ namespace Codecool.CodecoolShop.Daos;
 
 public interface IShoppingCartDao : IDao<Product>
 {
-    public void ChangeNumber(int id, int number);
-    public void EmptyCart();
+    public void ChangeNumber(int id, int number, int? userId);
+    public void EmptyCart(int? userId);
     public IEnumerable<Item> GetAllForAdmin();
-    public IEnumerable<Item> GetAllForUser();
-    public new void Add(Product item);
-    public new void Remove(int id);
+    public IEnumerable<Item> GetAllForUser(int? userId);
+    public void Add(Product item, int? userId);
+    public void Remove(int id, int? userId);
 }

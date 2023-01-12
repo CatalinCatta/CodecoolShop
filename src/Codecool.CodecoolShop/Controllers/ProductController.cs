@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Codecool.CodecoolShop.Models;
 using Codecool.CodecoolShop.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace Codecool.CodecoolShop.Controllers;
 
@@ -49,25 +50,25 @@ public class ProductController : Controller
     public IActionResult AddToCart(int id)
     {
         var product = ProductService.GetProduct(id);
-        ShoppingCart.Add(product);
+        ShoppingCart.Add(product, HttpContext.Session.GetInt32("id"));
         return RedirectToAction(actionName: "Index", controllerName: "Product");
     }
 
     public IActionResult RemoveFromCart(int id)
     {
-        ShoppingCart.Remove(id);
+        ShoppingCart.Remove(id, HttpContext.Session.GetInt32("id"));
         return RedirectToAction(actionName: "Cart", controllerName: "Product");
     }
 
     public IActionResult AdjustCartItemNumber(int id, int number)
     {
-        ShoppingCart.ChangeNumber(id, number);
+        ShoppingCart.ChangeNumber(id, number, HttpContext.Session.GetInt32("id"));
         return RedirectToAction(actionName: "Cart", controllerName: "Product");
     }
 
     public IActionResult Cart()
     {
-        return View(ShoppingCart.GetAllForUser());
+        return View(ShoppingCart.GetAllForUser(HttpContext.Session.GetInt32("id")));
     }
 
     public IActionResult Privacy()

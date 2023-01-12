@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Runtime.CompilerServices;
@@ -25,7 +26,7 @@ public class ShoppingCartDao : IShoppingCartDao
         return _instance ??= new ShoppingCartDao(connectionString);
     }
 
-    public void Add(Product product)
+    public void Add(Product product, int? userId)
     {
         const string query =
             @"IF EXISTS(select quantity from cart where user_id=@user_id AND product_id = @product_id) BEGIN
@@ -38,7 +39,7 @@ public class ShoppingCartDao : IShoppingCartDao
             var cmd = new SqlCommand(query, connection);
             if (connection.State == ConnectionState.Closed)
                 connection.Open();
-            cmd.Parameters.AddWithValue("@user_id", 1); // *** TO DO ***  Implement user
+            cmd.Parameters.AddWithValue("@user_id", userId);
             cmd.Parameters.AddWithValue("@product_id", product.Id);
             cmd.ExecuteNonQuery();
             connection.Close();
@@ -49,17 +50,17 @@ public class ShoppingCartDao : IShoppingCartDao
         }
     }
 
-    public void Remove(int id)
+    public void Remove(int productId, int? userId)
     {
-        const string query = @"DELETE FROM cart WHERE product_id=@id AND user_id=@user_id;";
+        const string query = @"DELETE FROM cart WHERE product_id=@product_id AND user_id=@user_id;";
         try
         {
             using var connection = new SqlConnection(_connectionString);
             var cmd = new SqlCommand(query, connection);
             if (connection.State == ConnectionState.Closed)
                 connection.Open();
-            cmd.Parameters.AddWithValue("@id", id);
-            cmd.Parameters.AddWithValue("@user_id", 1); // *** TO DO ***  Implement user
+            cmd.Parameters.AddWithValue("@product_id", productId);
+            cmd.Parameters.AddWithValue("@user_id", userId);
             cmd.ExecuteNonQuery();
             connection.Close();
         }
@@ -69,7 +70,7 @@ public class ShoppingCartDao : IShoppingCartDao
         }
     }
 
-    public void ChangeNumber(int id, int number)
+    public void ChangeNumber(int id, int number, int? userId)
     {
         const string query = @"UPDATE cart SET quantity = @number WHERE product_id=@id AND user_id=@user_id;";
         try
@@ -79,7 +80,7 @@ public class ShoppingCartDao : IShoppingCartDao
             if (connection.State == ConnectionState.Closed)
                 connection.Open();
             cmd.Parameters.AddWithValue("@id", id);
-            cmd.Parameters.AddWithValue("@user_id", 1); // *** TO DO ***  Implement user
+            cmd.Parameters.AddWithValue("@user_id", userId);
             cmd.Parameters.AddWithValue("@number", number);
             cmd.ExecuteNonQuery();
             connection.Close();
@@ -90,7 +91,7 @@ public class ShoppingCartDao : IShoppingCartDao
         }
     }
 
-    public void EmptyCart()
+    public void EmptyCart(int? userId)
     {
         const string query = @"DELETE FROM cart WHERE user_id=@id;";
         try
@@ -99,7 +100,7 @@ public class ShoppingCartDao : IShoppingCartDao
             var cmd = new SqlCommand(query, connection);
             if (connection.State == ConnectionState.Closed)
                 connection.Open();
-            cmd.Parameters.AddWithValue("@id", 1); // *** TO DO ***  Implement user
+            cmd.Parameters.AddWithValue("@id", userId);
             cmd.ExecuteNonQuery();
             connection.Close();
         }
@@ -109,7 +110,7 @@ public class ShoppingCartDao : IShoppingCartDao
         }
     }
 
-    public IEnumerable<Item> GetAllForUser()
+    public IEnumerable<Item> GetAllForUser(int? userId)
     {
         const string cmdText = @"SELECT * FROM cart WHERE user_id=@user_id;";
         try
@@ -119,7 +120,8 @@ public class ShoppingCartDao : IShoppingCartDao
             var cmd = new SqlCommand(cmdText, connection);
             if (connection.State == ConnectionState.Closed)
                 connection.Open();
-            cmd.Parameters.AddWithValue("@user_id", 1); // *** TO DO ***  Implement user
+            if (userId == null) throw new NullReferenceException();
+            cmd.Parameters.AddWithValue("@user_id", userId);
             var reader = cmd.ExecuteReader();
             if (!reader.HasRows)
                 return results;
@@ -166,13 +168,16 @@ public class ShoppingCartDao : IShoppingCartDao
         }
     }
 
-    public Product Get(int id)
-    {
-        throw new System.NotImplementedException();
-    }
 
-    public IEnumerable<Product> GetAll()
-    {
+    public void Add(Product item) =>
         throw new System.NotImplementedException();
-    }
+
+    public void Remove(int id) =>
+        throw new System.NotImplementedException();
+
+    public Product Get(int id) =>
+        throw new System.NotImplementedException();
+
+    public IEnumerable<Product> GetAll() =>
+        throw new System.NotImplementedException();
 }

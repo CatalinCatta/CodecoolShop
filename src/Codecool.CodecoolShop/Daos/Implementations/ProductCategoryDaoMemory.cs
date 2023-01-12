@@ -8,7 +8,6 @@ namespace Codecool.CodecoolShop.Daos.Implementations;
 
 internal class ProductCategoryDaoMemory : IProductCategoryDao
 {
-    private readonly List<ProductCategory> _data = new();
     private static ProductCategoryDaoMemory _instance;
     private readonly string _connectionString;
 

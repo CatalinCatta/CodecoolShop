@@ -1,4 +1,5 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Runtime.CompilerServices;
@@ -24,7 +25,7 @@ public class OrderHistoryDao: IOrderHistoryDao
         return _instance ??= new OrderHistoryDao(connectionString);
     }
 
-    public void Add(Item product)
+    public void Add(Item product, int? id)
     {
         const string query =
             @"INSERT INTO order_history(user_id, product_id, quantity) VALUES (@user_id, @product_id, @quantity);";
@@ -34,7 +35,8 @@ public class OrderHistoryDao: IOrderHistoryDao
             var cmd = new SqlCommand(query, connection);
             if (connection.State == ConnectionState.Closed)
                 connection.Open();
-            cmd.Parameters.AddWithValue("@user_id", 1); // *** TO DO ***  Implement user
+            
+            cmd.Parameters.AddWithValue("@user_id", id); 
             cmd.Parameters.AddWithValue("@product_id", product.Product.Id);
             cmd.Parameters.AddWithValue("@quantity", product.Number);
             cmd.ExecuteNonQuery();
@@ -46,7 +48,7 @@ public class OrderHistoryDao: IOrderHistoryDao
         }
     }
 
-    public IEnumerable<ItemHistory> GetAllForUser()
+    public IEnumerable<ItemHistory> GetAllForUser(int userId)
     {
         const string cmdText = @"SELECT * FROM order_history WHERE user_id=@user_id;";
         try
@@ -56,7 +58,7 @@ public class OrderHistoryDao: IOrderHistoryDao
             var cmd = new SqlCommand(cmdText, connection);
             if (connection.State == ConnectionState.Closed)
                 connection.Open();
-            cmd.Parameters.AddWithValue("@user_id", 1); // *** TO DO ***  Implement user
+            cmd.Parameters.AddWithValue("@user_id", userId);
             var reader = cmd.ExecuteReader();
             if (!reader.HasRows)
                 return results;
@@ -102,10 +104,9 @@ public class OrderHistoryDao: IOrderHistoryDao
             throw new RuntimeWrappedException(e);
         }
     }
-    
+
+    public void Add(Item item) => throw new NotImplementedException();
     public void Remove(int id) => throw new NotImplementedException();
-
     public Item Get(int id) => throw new NotImplementedException();
-
     public IEnumerable<Item> GetAll() => throw new NotImplementedException();
 }
