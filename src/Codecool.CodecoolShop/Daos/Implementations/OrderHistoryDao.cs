@@ -57,7 +57,8 @@ public class OrderHistoryDao: IOrderHistoryDao
                 ON oh.user_id = ud.user_id
             LEFT JOIN products p 
                 ON p.id = oh.product_id
-            WHERE oh.user_id = @userId;";
+            WHERE oh.user_id = @userId
+            ORDER BY oh.date DESC;";
         try
         {
             var results = new List<OrderHistoryModel>();
@@ -100,7 +101,8 @@ public class OrderHistoryDao: IOrderHistoryDao
             LEFT JOIN users_data ud 
                 ON oh.user_id = ud.user_id
             LEFT JOIN products p 
-                ON p.id = oh.product_id;";
+                ON p.id = oh.product_id
+            ORDER BY oh.date DESC;";
         try
         {
             var results = new List<OrderHistoryModel>();

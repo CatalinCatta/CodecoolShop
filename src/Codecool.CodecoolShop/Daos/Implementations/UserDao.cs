@@ -247,7 +247,7 @@ public class UserDao :IUserDao
             ELSE
             BEGIN
                 INSERT INTO users_data 
-                    (users_id, card_holder, card_number, expiry_month, expiry_year, cvv)
+                    (user_id, card_holder, card_number, expiry_month, expiry_year, cvv)
                     VALUES (@userId , @cardHolder, @cardNumber, @expiryMonth, @expiryYear, @cvv)
             END;";
         try
