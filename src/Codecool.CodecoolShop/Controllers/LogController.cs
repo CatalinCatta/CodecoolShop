@@ -27,7 +27,6 @@ public class LogController : Controller
     
     public IActionResult Login(bool wrongInput=false)
     {
-        ViewBag.Username = "HttpContext.Session.GetString(\"username\")";
         ViewBag.wrongInput = wrongInput;
         return View(new LoginModel());
     }
@@ -35,7 +34,6 @@ public class LogController : Controller
     [HttpPost]
     public IActionResult LoginValidation(LoginModel model)
     {
-        ViewBag.Username = "HttpContext.Session.GetString(\"username\")";
         if (!ModelState.IsValid) return RedirectToAction("Login", "Log", new { wrongInput = true });
         
         var userExpected = _userDao.GetPassword(model.UserName);
@@ -56,7 +54,6 @@ public class LogController : Controller
 
     public IActionResult SignUp(bool taken=false, bool empty = false)
     {
-        ViewBag.Username = "";
         ViewBag.taken = taken;
         ViewBag.empty = empty;
         return View(new SignUpModel());
@@ -65,7 +62,6 @@ public class LogController : Controller
     [HttpPost]
     public IActionResult SignupValidation(SignUpModel model)
     {
-        ViewBag.Username = "HttpContext.Session.GetString(\"username\")";
         if (!ModelState.IsValid) return RedirectToAction("Signup", "Log", new { empty = true });
         
         var usernames = _userDao.GetAllNames().Concat(_adminDao.GetAllNames()).ToList();

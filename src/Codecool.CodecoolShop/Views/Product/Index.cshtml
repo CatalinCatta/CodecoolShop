@@ -6,29 +6,31 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model List<Codecool.CodecoolShop.Models.Product>
 
-<div class="container card-group">
-    @foreach (var element in Model)
-    {
-        <div class="col-lg-4 mb-3" style="display: inline-block; max-width: 30%">
-            <div class="card">
-                <img src="/img/@(element.Name).jpg" style="height: 50%; width: 50%; align-self: center; padding-top: 10px" alt="@(element.Name)">
+<section class="bg-light pt-5 pb-5 shadow-sm">
+    <div class="container">
+        <div class="row">
+            @foreach (var element in Model)
+            {
+                <div class="col-lg-4 mb-3 d-flex align-items-stretch">
+                    <div class="card">
+                            <img src="/img/@(element.Name).jpg" class="card-img-top pt-3" alt="@(element.Name)" style="height: 15rem; object-fit: scale-down;">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@element.Name</h5>
+                            <p class="card-text mb-4">Category: @element.ProductCategory.Name</p>
+                            <p class="card-text mb-4">Supplier: @element.Supplier.Name</p>
+                            <p class="card-text mb-4">@element.Description</p>
+                            <p class="card-text mb-4">
+                                <strong>Price: @element.DefaultPrice.ToString("C2")</strong>
+                            </p>
 
-                <div class="card-body text-center">
-                    <h5 class="card-title">@element.Name</h5>
-                    <p class="card-text text-left">@element.Description.</p>
-                    <p class="card-text">Category: @element.ProductCategory.Name</p>
-                    <p class="card-text">Supplier: @element.Supplier.Name</p>
-                    <p class="card-text text-center">
-                        <strong>Price: @element.DefaultPrice.ToString("C2")</strong>
-                    </p>
-                    @if (Context.Session.GetString("username") != null)
-                    {
-                        <a class="btn btn-primary" type="button" style="float: bottom"  asp-area="" asp-controller="Product" asp-action="AddToCart" asp-route-id="@element.Id">Add To Cart</a>
-                    }
+                            @if (Context.Session.GetString("username") != null)
+                            {
+                                <a class="btn btn-primary mt-auto align-self-start" asp-area="" asp-controller="Product" asp-action="AddToCart" asp-route-id="@element.Id">Add To Cart</a>
+                            }
+                        </div>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
-    }
-
-
-</div>
+    </div>
+</section>
