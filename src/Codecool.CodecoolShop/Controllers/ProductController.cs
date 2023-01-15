@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Codecool.CodecoolShop.Models;
 using Codecool.CodecoolShop.Services;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace Codecool.CodecoolShop.Controllers;
 
@@ -15,6 +16,7 @@ public class ProductController : Controller
 {
     private ILogger<ProductController> Logger1 { get; }
     private ProductService ProductService { get; }
+    private IProductDao ProductDao { get; }
     private IShoppingCartDao ShoppingCart { get; }
 
     public ProductController(ILogger<ProductController> logger)
@@ -26,6 +28,7 @@ public class ProductController : Controller
             dbManager.ProductCategoryDao,
             dbManager.SupplierDao);
         ShoppingCart = dbManager.ShoppingCartDao;
+        ProductDao = dbManager.ProductDao;
     }
 
     public IActionResult Index(int category = 0, int supplier = 0)
@@ -47,23 +50,29 @@ public class ProductController : Controller
         return View(products.ToList());
     }
 
-    public IActionResult AddToCart(int id)
+    public void AddToCart(int id)
     {
         var product = ProductService.GetProduct(id);
         ShoppingCart.Add(product, HttpContext.Session.GetInt32("id"));
-        return RedirectToAction(actionName: "Index", controllerName: "Product");
     }
-
-    public IActionResult RemoveFromCart(int id)
+    
+    public decimal RemoveFromCart(int id)
     {
         ShoppingCart.Remove(id, HttpContext.Session.GetInt32("id"));
-        return RedirectToAction(actionName: "Cart", controllerName: "Product");
+        return ShoppingCart.GetAllForUser(HttpContext.Session.GetInt32("id")).Sum(i => i.Product.DefaultPrice * i.Number);
     }
 
-    public IActionResult AdjustCartItemNumber(int id, int number)
+    public string AdjustCartItemNumber(int id, int number)
     {
         ShoppingCart.ChangeNumber(id, number, HttpContext.Session.GetInt32("id"));
-        return RedirectToAction(actionName: "Cart", controllerName: "Product");
+        return JsonConvert.SerializeObject(new ChangeCartNumber
+        {
+            ProductPrice = ProductDao.Get(id).DefaultPrice * number,
+            CartNewPrice = ShoppingCart.GetAllForUser(HttpContext.Session.GetInt32("id"))
+                .Sum(i => i.Product.DefaultPrice * i.Number),
+            CartItemsNumber = ShoppingCart.GetAllForUser(HttpContext.Session.GetInt32("id"))
+                .Sum(i => i.Number)
+        });
     }
 
     public IActionResult Cart()
@@ -85,5 +94,12 @@ public class ProductController : Controller
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+
+    private class ChangeCartNumber
+    {
+        public decimal ProductPrice { get; set; }
+        public decimal CartItemsNumber { get; set; }
+        public decimal CartNewPrice { get; set; }
     }
 }

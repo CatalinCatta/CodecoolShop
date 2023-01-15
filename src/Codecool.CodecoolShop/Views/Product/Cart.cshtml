@@ -9,14 +9,14 @@
     <div class="col-md-8">
         @foreach (var element in Model)
         {
-            <div style="display: inline-block;" class="mt-3">
+            <div style="display: inline-block;" class="mt-3" id="@element.Product.Id">
                 <div class="card">
                     <div class="row">
                         <div class="col-md-4">
                             <img src="/img/@(element.Product.Name).jpg" style="height: auto; width: 50%; align-self: center; padding-top: 10px; padding-left: 10px" alt="@(element.Product.Name)">
                         </div>
                         <div class="col-md-8 text-right">
-                            <a class="btn btn-danger" asp-area="" asp-controller="Product" asp-action="RemoveFromCart" asp-route-id="@element.Product.Id">
+                            <a class="btn btn-danger" onclick="removeFromCart(@element.Product.Id)">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                                     <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
                                 </svg>
@@ -38,17 +38,15 @@
                                 {
                                     @for (var i = 1; i < element.Number; i++)
                                     {
-                                        var i1 = i;
-                                        <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="AdjustCartItemNumber" asp-route-id="@element.Product.Id" asp-route-number="@i1">@i1</a>
+                                        <a class="dropdown-item" onclick="editNumber(@element.Product.Id, @i)" id="select-id-@element.Product.Id-nr-@i">@i</a>
                                     }
                                 }
-                                <a class="dropdown-item active" href="#">@element.Number</a>
+                                <a class="dropdown-item active" onclick="editNumber(@element.Product.Id, @element.Number)" id="select-id-@element.Product.Id-nr-@element.Number">@element.Number</a>
                                 @if (element.Number < 50)
                                 {
                                     @for (var i = element.Number + 1; i < 51; i++)
                                     {
-                                        var i1 = i;
-                                        <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="AdjustCartItemNumber" asp-route-id="@element.Product.Id" asp-route-number="@i1">@i1</a>
+                                        <a class="dropdown-item" onclick="editNumber(@element.Product.Id, @i)" id="select-id-@element.Product.Id-nr-@i">@i</a>
                                     }
                                 }
                             </div>
@@ -60,22 +58,22 @@
     </div>
     @if (Model.Any())
     {
-        <div class="col-md-4">
+        <div class="col-md-4" id="cart-div">
             <div class="card">
                 <div class="card-body">
-                    <div class="text-center row list-group-item">
+                    <div class="text-center row list-group-item" id="cart-items-number" number="@Model.Sum(i => i.Number)">
                         Items(@Model.Sum(i => i.Number)):
                     </div>
                     <div class="items text-center row list-group-item">
                         @foreach (var element in Model)
                         {
-                            <div>
+                            <div id="cart-item-@element.Product.Id">
                                 @element.Product.Name (@element.Number)
                             </div>
                         }
                     </div>
                     <div class="items row list-group-item text-center">
-                        <div>Total price: <strong>@(Model.Sum(i => i.Product.DefaultPrice * i.Number).ToString("C2"))</strong></div>
+                        <div>Total price: <strong  id="final-price">@(Model.Sum(i => i.Product.DefaultPrice * i.Number).ToString("C2"))</strong></div>
                     </div>
                     <a class="col-md-12 btn btn-primary" asp-area="" asp-controller="Payment" asp-action="Checkout">Checkout</a>
                 </div>
