@@ -25,8 +25,9 @@
 - Has basic route authorization  
 
 ### How to Run the Project?
-- Clone the [Repo](https://github.com/CodecoolGlobal/codecool-shop-2-csharp-CatalinCatta.git)
-- You only should to run the application.
+- Clone the [Repo](https://github.com/CodecoolGlobal/codecool-shop-2-csharp-CatalinCatta.git).
+- Run CodecoolShop.exe.lnk.
+- Open "https://localhost:5001" or "https://localhost:5000" in a browser.
 
 ![Home](Images/Home.jpg)
 ![PhoneView](Images/PhoneView.jpg)
