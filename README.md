@@ -27,3 +27,13 @@
 ### How to Run the Project?
 - Clone the [Repo](https://github.com/CodecoolGlobal/codecool-shop-2-csharp-CatalinCatta.git)
 - You only should to run the application.
+
+![Home](Images/Home.jpg)
+![PhoneView](Images/PhoneView.jpg)
+![SignUp](Images/SignUp.jpg)
+![LogIn](Images/LogIn.jpg)
+![Filtered](Images/Filtered.jpg)
+![Cart](Images/Cart.jpg)
+![Delivery](Images/Delivery.jpg)
+![Payment](Images/Payment.jpg)
+![Confirmation](Images/Confirmation.jpg)
