@@ -2,11 +2,15 @@
 
 ### About the Project:
 
-- Welcome to CodecoolShop, an online shopping site where you can find a variety of tech and gaming products! Our website offers a user-friendly interface, allowing you to easily browse and purchase products such as laptops, gaming accessories, keyboards, and video games.
+- Welcome to CodecoolShop, an online shopping platform where you can find a wide range of tech and gaming products. Our website has been developed using the latest front-end technologies, such as Razor Pages, JavaScript, Bootstrap, HTML, and CSS, and in the back-end, we use C#, ASP.NET CORE Framework, and MicrosoftSQL Server. We offer payment via debit or credit cards with payment validation to ensure a secure transaction process.
 
-- To get started, simply create an account and start adding items to your cart. Once you are ready to make a purchase, you can securely complete your transaction using one of our available payment methods. We offer fast and reliable shipping, so you can receive your items as soon as possible.
+- Our platform offers a user-friendly interface that makes it easy for you to browse and purchase products such as laptops, gaming accessories, keyboards, and video games. You can create an account and start adding items to your cart.
 
-- Thank you for choosing CodecoolShop, and we hope you enjoy your shopping experience!
+- We have implemented a delivery validation system to ensure that your items are shipped to the correct address. We also offer the option to save your delivery and payment details for future purchases, making the checkout process even quicker and easier.
+
+- After you have placed your order, we send you a confirmation to ensure that the order was successfully placed. You can also view your order history on our platform, making it easy for you to keep track of your purchases.
+
+- At CodecoolShop, we value feedback from our customers, and we continuously work to improve our platform to provide you with the best shopping experience. Thank you for choosing CodecoolShop for your needs.
 
 ### Used technologies:
 #### Backend technologies:
